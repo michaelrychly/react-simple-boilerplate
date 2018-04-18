@@ -7,7 +7,7 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      test: "",
+      newMessage: "",
       currentUser: {
         name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: [
@@ -26,6 +26,17 @@ class App extends Component {
   }
 
   componentDidMount(){
+    const chatSocket = new WebSocket("ws://localhost:3001/");
+
+    chatSocket.onopen = function (event) {
+      chatSocket.send("Connected to server");
+    };
+    this.socket = chatSocket;
+
+      console.log("chatSocket is open", this.socket);
+    //this.socket.onmessage = function (event) {
+    //  console.log("Any event from socket: ", event.data);
+    //}
     console.log("componentDidMount in <App/>");
     setTimeout(() => {
       const newMessage = {id:3,
@@ -34,6 +45,7 @@ class App extends Component {
       const messages = this.state.messages.concat(newMessage);
       this.setState({messages: messages});
     }, 500);
+
   }
 
   _getID = () => {
@@ -46,31 +58,32 @@ class App extends Component {
   }
 
   _handleInput = (event) => {
-    event.preventDefault();
-    const state = this.state;
-    const id = this._getID() + 1;
-    const newMessage = {id: id,
-                        username: "Michael",
-                        content: event.target.value};
-    const messages = this.state.messages.concat(newMessage);
-    this.setState({messages: messages});
+    //event.preventDefault();
+
+    //const state = this.state;
+    //const id = this._getID() + 1;
+    //const newMessage = {id: id,
+    //                    username: "Michael",
+    //                    content: event.target.value};
+    //const messages = this.state.messages.concat(newMessage);
+    this.setState({newMessage: event.target.value});
     console.log("event trigger else: ", this.state);
   };
 
   _handleEnter = (event) => {
     event.preventDefault();
-    console.log("in onSubmit");
 
     const state = this.state;
     const id = this._getID() + 1;
     const newMessage = {id: id,
                         username: "Michael",
-                        content: event.target.value};
+                        content: this.state.newMessage};
     const messages = this.state.messages.concat(newMessage);
-    this.setState({messages: messages});
+    this.setState({newMessage: '', messages: messages});
     console.log("event trigger else: ", this.state);
   };
 
+  // Send text to all users through the server
 
   render() {
     console.log("Rendering <App/>");

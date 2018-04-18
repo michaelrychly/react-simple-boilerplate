@@ -12,7 +12,7 @@ class ChatBar extends Component {
           <input className="chatbar-message" placeholder="Type a message and hit ENTER"
           type="text" name="message" onChange={this.props.onChange}
           />
-          <input type="submit"/>
+          <input className="chatbar-enter" type="submit"/>
         </form>
       </footer>
     )

@@ -80,7 +80,10 @@ class App extends Component {
                         content: this.state.newMessage};
     const messages = this.state.messages.concat(newMessage);
     this.setState({newMessage: '', messages: messages});
-    console.log("event trigger else: ", this.state);
+    let name = JSON.stringify(newMessage.username);
+
+    this.socket.send("User " + JSON.stringify(newMessage.username).replace(/"([^"]+(?="))"/g, '$1') +
+     " says " + JSON.stringify(newMessage.content).replace(/"([^"]+(?="))"/g, '$1'));
   };
 
   // Send text to all users through the server

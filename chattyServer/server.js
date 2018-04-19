@@ -1,6 +1,6 @@
 const express = require('express');
 const SocketServer = require('ws').Server;
-const Test = require('ws');
+const WebSocket = require('ws');
 
 // Set the port to 3001
 const PORT = 3001;
@@ -19,15 +19,36 @@ const wss = new SocketServer({ server });
 // the ws parameter in the callback.
 wss.on('connection', (ws) => {
   console.log('Client connected');
-//receive messages from the client
-ws.on('message', (data) => {
+  //receive messages from the client
+  ws.on('message', (data) => {
       // Broadcast to everyone else.
-    wss.clients.forEach(function each(client) {
-      if (client !== ws && client.readyState === Test.OPEN) {
-        console.log("for each client if ", data);
-        client.send(data);
-      }
-    });
+      wss.clients.forEach(function each(client) {
+          let message = {};
+          console.log("client ", client.readyState);
+          console.log("Socket ", WebSocket.OPEN);
+          if (client !== ws && client.readyState === WebSocket.OPEN) {
+          if (data != "Connected to server") {
+            const parsed = JSON.parse(data);
+            switch(parsed.type) {
+              case "postNotification":
+                message = {type: "incomingMessage",
+                           id: parsed.content.id,
+                           username: parsed.content.username,
+                           content: parsed.content.content};
+                client.send(JSON.stringify(message));
+                break;
+              case "postMessage":
+                message = {type: "incomingNotification",
+                           content: parsed.content};
+                client.send(JSON.stringify(message));
+                break;
+              default:
+                // show an error in the console if the message type is unknown
+                throw new Error("Unknown event type " + parsed.type);
+            }
+          }
+        }
+      });
 });
 
 // Set up a callback for when a client closes the socket. This usually means they closed their browser.

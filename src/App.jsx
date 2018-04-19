@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Navbar from "./Navbar.jsx";
 import ChatBar from "./ChatBar.jsx";
 import Message from "./Message.jsx";
 import MessageList from "./MessageList.jsx";
@@ -10,8 +11,8 @@ class App extends Component {
     this.state = {
       currentUser: {
         name: ""}, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: []
-      }
+      messages: [],
+      clientNumber: ""};
   }
 
   componentDidMount(){
@@ -27,10 +28,6 @@ class App extends Component {
       console.log(" original ", event.data);
       if (event.data != "Connected to server") {
         console.log(" state ", this.state);
-
-        console.log("first para ", Object.values(JSON.parse(event.data))[0]);
-        console.log("sent user  ", Object.values(JSON.parse(event.data))[1]);
-        console.log("state user ", this.state.currentUser.name);
         const state = this.state;
         let newUser = "";
         let newMessage = {};
@@ -39,31 +36,34 @@ class App extends Component {
         // This line turns it into an object
         const data = JSON.parse(event.data);
         switch(data.type) {
+          case "clientNumber":
+            console.log("Number ", data.number);
+            this.setState(...state, {clientNumber: data.number});
+            break;
           case "incomingMessage":
             console.log("Message ", data);
-            // handle incoming message
+            // handle incoming messages
             newUser = Object.values(JSON.parse(event.data))[1];
 
             newMessage = {id: Object.values(JSON.parse(event.data))[1],
-                                username: Object.values(JSON.parse(event.data))[2],
-                                content: Object.values(JSON.parse(event.data))[3]};
+                          username: Object.values(JSON.parse(event.data))[2],
+                          content: Object.values(JSON.parse(event.data))[3]};
             messages = this.state.messages.concat(newMessage);
             this.setState(...state, {currentUser: {name: newUser},
-                                                messages: messages});
+                                     messages: messages});
             console.log("after addMessage ", this.state);
             break;
           case "incomingNotification":
             console.log("notification ", data);
-            // handle incoming message
+            // handle incoming notifications
             newUser = "Notification";
 
             newMessage = {id: uuidv5(`http://localhost:3000/${new Date().getMilliseconds()}`, uuidv5.DNS),
-                                username: newUser,
-                                content: Object.values(JSON.parse(event.data))[1]};
+                          username: newUser,
+                          content: Object.values(JSON.parse(event.data))[1]};
             messages = this.state.messages.concat(newMessage);
             this.setState(...state, {messages: messages});
             console.log("after addMessage ", this.state);
-            // handle incoming notification
             break;
           default:
             // show an error in the console if the message type is unknown
@@ -116,21 +116,11 @@ class App extends Component {
     console.log("Rendering <App/>");
     return (
       <div>
-        <Navbar />
+        <Navbar value={this.state.clientNumber}/>
         <MessageList value={this.state.messages} />
         <ChatBar value={this.state} addMessage={this._addMessage}/>
       </div>
     );
-  }
-}
-
-class Navbar extends Component {
-  render() {
-    return (
-      <nav className="navbar">
-        <a href="/" className="navbar-brand">Chatty</a>
-      </nav>
-    )
   }
 }
 

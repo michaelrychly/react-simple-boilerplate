@@ -18,11 +18,14 @@ const wss = new SocketServer({ server });
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
 wss.on('connection', (ws) => {
-  console.log('Client connected');
+  let clients = { type: "clientNumber",
+                  number: wss.clients.size};
+  console.log('Client connected', clients);
   //receive messages from the client
   ws.on('message', (data) => {
       // Broadcast to everyone else.
       wss.clients.forEach(function each(client) {
+          client.send(JSON.stringify(clients));
           let message = {};
           console.log("client ", client.readyState);
           console.log("Socket ", WebSocket.OPEN);

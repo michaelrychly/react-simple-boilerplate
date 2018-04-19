@@ -9,7 +9,7 @@ class App extends Component {
     super(props);
     this.state = {
       currentUser: {
-        name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
+        name: ""}, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: []
       }
   }
@@ -33,26 +33,26 @@ class App extends Component {
                             content: Object.values(JSON.parse(event.data))[2]};
         const messages = this.state.messages.concat(newMessage);
         this.setState({messages: messages});
-      } else {
-        console.log("hmm");
       }
     }
   }
   //adding a new message to the state messages
-  _addMessage = (event, sendMessage) => {
+  _addMessage = (event, sentMessage) => {
     event.preventDefault();
 
-    console.log("Enter ", sendMessage);
+    console.log("Message ", sentMessage, " user ", sentMessage.newUser);
     console.log("event ", event.target);
 
-    const state = this.state;
-    //creating new message object with UUID
-    const newMessage = {id: uuidv5(`http://localhost:3000/${new Date().getMilliseconds()}`, uuidv5.DNS),
-                        username: "Michael",
-                        content: sendMessage};
-    const messages = this.state.messages.concat(newMessage);
-    this.setState({messages: messages});
-    this.socket.send(JSON.stringify(newMessage));
+    if (sentMessage.currentInput === "chatbar-message") {
+      const state = this.state;
+      //creating new message object with UUID
+      const newMessage = {id: uuidv5(`http://localhost:3000/${new Date().getMilliseconds()}`, uuidv5.DNS),
+                          username: sentMessage.newUser,
+                          content: sentMessage.newMessage};
+      const messages = this.state.messages.concat(newMessage);
+      this.setState({messages: messages});
+      this.socket.send(JSON.stringify(newMessage));
+    }
   };
 
   render() {

@@ -21,19 +21,17 @@ const wss = new SocketServer({ server });
 wss.on('connection', (ws) => {
   let clients = { type: "clientNumber",
                   number: wss.clients.size};
-  console.log('Client connected', clients);
-  //receive messages from the client
+  // receive messages from the client
   ws.on('message', (data) => {
       // Broadcast to everyone else.
       wss.clients.forEach(function each(client) {
           client.send(JSON.stringify(clients));
           let message = {};
-          console.log("client ", client.readyState);
-          console.log("Socket ", WebSocket.OPEN);
           if (client.readyState === WebSocket.OPEN) {
           if (data != "Connected to server") {
             const parsed = JSON.parse(data);
             switch(parsed.type) {
+              //broadcast client messages
               case "postNotification":
                 message = {type: "incomingMessage",
                            id: uuidv5(`http://localhost:3000/${new Date().getMilliseconds()}`, uuidv5.DNS),
@@ -41,14 +39,15 @@ wss.on('connection', (ws) => {
                            content: parsed.content.content};
                 client.send(JSON.stringify(message));
                 break;
+              //broadcast client messages
               case "postMessage":
                 message = {type: "incomingNotification",
+                           id: uuidv5(`http://localhost:3000/${new Date().getMilliseconds()}`, uuidv5.DNS),
                            content: parsed.content};
-                console.log("post: ", message, " data ", parsed);
                 client.send(JSON.stringify(message));
                 break;
+              // show an error in the console if the message type is unknown
               default:
-                // show an error in the console if the message type is unknown
                 throw new Error("Unknown event type " + parsed.type);
             }
           }

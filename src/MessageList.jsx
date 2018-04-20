@@ -1,20 +1,11 @@
 import React, {Component} from 'react';
+import Message from "./Message.jsx";
 
 class MessageList extends Component {
   render() {
-    console.log("Rendering <MessageList/>", this.props.value);
+    //loop over all messages and notifications sent
     const Messages = this.props.value.map((message) => {
-      //differentiate between notifications and messages
-      if (message.username === "Notification"){
-        return (<div key={message.id} className="notification">
-                  <span className="notification-content">{message.content} </span>
-                </div>  )
-      } else {
-        return (<div key={message.id} className="message">
-                  <span className="message-username">{message.username}</span>
-                  <span className="message-content">{message.content} </span>
-                </div>  )
-      }
+      return  (<Message key={message.id} value={message}/>)
     })
     return (
       <main className="messages">

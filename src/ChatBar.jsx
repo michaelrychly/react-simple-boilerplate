@@ -1,47 +1,41 @@
 import React, {Component} from 'react';
-import Message from './Message.jsx';
 
 class ChatBar extends Component {
   constructor(props){
     super(props);
     this.state = {
-      newUser: "",
-      newMessage: "",
-      currentInput: ""
+      user: ""
     }
   }
-
+  // get users message and the username and send it to App.jsx
   _newMessage = (event) => {
-    event.preventDefault();
-    const state = this.state;
-    const newMessage = event.target.value;
-    const newUser = this.state.newUser;
-    const currentInput = event.target.className;
-
-    this.setState(...state, {newMessage: newMessage,
-                   newUser: newUser,
-                   currentInput: currentInput});
+    if (event.charCode === 13) {
+      event.preventDefault();
+      this.props.addMessage(this.state.user, event.target.value);
+      // clear the message input field
+      event.target.value = "";
+    }
   };
-
+  // get the new username, update the state and send it to App.jsx
   _newUser = (event) => {
-    event.preventDefault();
-    console.log("in new user", event.target.value);
-    const state = this.state;
-    const newUser = event.target.value;
-    const currentInput = event.target.className;
-    this.setState(...state, {newUser: newUser,
-                             currentInput: currentInput});
+    if (event.charCode === 13) {
+      event.preventDefault();
+      const state = this.state;
+      let newUser = event.target.value;
+
+      this.setState(...state, {user: newUser});
+      this.props.addUser(newUser);
+    }
   };
+
   render() {
-    console.log("Rendering <ChatBar/>");
     return (
       <footer>
-        <form className="chatbar" onSubmit={(event) => {this.props.addMessage(event, this.state)}}>
+        <form className="chatbar">
           <input className="chatbar-username" placeholder="Your Name (Optional)"
-           onChange={this._newUser} autoFocus/>
+           onKeyPress={this._newUser} />
           <input className="chatbar-message" placeholder="Type a message and hit ENTER"
-          type="text" name="message" onChange={this._newMessage}/>
-          <input className="chatbar-enter" type="submit" />
+           onKeyPress={this._newMessage} autoFocus/>
         </form>
       </footer>
     )

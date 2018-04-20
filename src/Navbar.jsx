@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 
 class Navbar extends Component {
   render() {
-    //console.log()
+    //show the app name and how many clients are connected
     return (
       <nav className="navbar">
         <a href="/" className="navbar-brand">Chatty</a>

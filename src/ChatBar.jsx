@@ -13,26 +13,24 @@ class ChatBar extends Component {
 
   _newMessage = (event) => {
     event.preventDefault();
+    const state = this.state;
     const newMessage = event.target.value;
-    //if username empty set it to "Anonymous"
-    let newUser = "";
-    if (this.state.newUser === "")  {
-      newUser = "Anonymous";
-    } else {
-      newUser = this.state.newUser;
-    }
+    const newUser = this.state.newUser;
     const currentInput = event.target.className;
-    this.setState(...this.state, {newMessage: newMessage,
+
+    this.setState(...state, {newMessage: newMessage,
                    newUser: newUser,
                    currentInput: currentInput});
   };
 
   _newUser = (event) => {
     event.preventDefault();
+    console.log("in new user", event.target.value);
+    const state = this.state;
     const newUser = event.target.value;
     const currentInput = event.target.className;
-    this.setState(...this.state, {newUser: newUser,
-                                  currentInput: currentInput});
+    this.setState(...state, {newUser: newUser,
+                             currentInput: currentInput});
   };
   render() {
     console.log("Rendering <ChatBar/>");
@@ -40,7 +38,7 @@ class ChatBar extends Component {
       <footer>
         <form className="chatbar" onSubmit={(event) => {this.props.addMessage(event, this.state)}}>
           <input className="chatbar-username" placeholder="Your Name (Optional)"
-          defaultValue={this.props.value.currentUser.name} onChange={this._newUser} autoFocus/>
+           onChange={this._newUser} autoFocus/>
           <input className="chatbar-message" placeholder="Type a message and hit ENTER"
           type="text" name="message" onChange={this._newMessage}/>
           <input className="chatbar-enter" type="submit" />

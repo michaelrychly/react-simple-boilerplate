@@ -37,7 +37,6 @@ class App extends Component {
         const data = JSON.parse(event.data);
         switch(data.type) {
           case "clientNumber":
-            console.log("Number ", data.number);
             this.setState(...state, {clientNumber: data.number});
             break;
           case "incomingMessage":
@@ -79,16 +78,21 @@ class App extends Component {
     console.log("Message ", sentMessage, " user ", sentMessage.newUser);
     console.log("event ", event.target);
     const state = this.state;
-    const newUser = sentMessage.newUser;
-    const newMessage = {id: uuidv5(`http://localhost:3000/${new Date().getMilliseconds()}`, uuidv5.DNS),
-                        username: sentMessage.newUser,
-                        content: sentMessage.newMessage};
+    //if username empty set it to "Anonymous"
+    let newUser = sentMessage.newUser;
+    if (newUser === "")  {
+      console.log("empty name");
+      newUser = "Anonymous";
+    }
 
     if (sentMessage.currentInput === "chatbar-message") {
       //creating new message object with UUID and update the state
+      const newMessage = {id: "",
+                          username: newUser,
+                          content: sentMessage.newMessage};
       const messages = this.state.messages.concat(newMessage);
-      this.setState(...state, {currentUser: {name: newUser},
-                               messages: messages});
+      //this.setState(...state, {currentUser: {name: newUser},
+      //                         messages: messages});
       const sendNotification = {type: "postNotification",
                                 username: newUser,
                                 content: newMessage}
@@ -96,18 +100,21 @@ class App extends Component {
     } else {
       //new username
       console.log("sent user in addMessage ", newUser);
-      console.log(" state name ", this.state.currentUser);
-      if (this.state.currentUser.name === "" || newUser === this.state.currentUser.name) {
-        console.log("same username");
-        const sendNotification = {type: "postNotification",
-                                  username: newUser,
-                                  content: newMessage}
-        this.socket.send(JSON.stringify(sendNotification));
-      } else {
-        console.log(" changed username");
-        const sendMessage = {type: "postMessage",
-                             content: `${newUser} has changed their name to ${this.state.currentUser.name}.`}
+      console.log(" state name ", this.state.currentUser.name);
+      if (newUser !== this.state.currentUser.name){
+        console.log(" changed username", newUser);
+        this.setState(...state, {currentUser: {name: newUser}});
+        let sendMessage = {};
+        if (this.state.currentUser.name === "") {
+          sendMessage = {type: "postMessage",
+                               content: `Anonymous has changed their name to ${newUser}.`}
+        } else {
+          sendMessage = {type: "postMessage",
+                               content: `${this.state.currentUser.name} has changed their name to ${newUser}.`}
+        }
         this.socket.send(JSON.stringify(sendMessage));
+      } else {
+        console.log("same username");
       }
     }
   };

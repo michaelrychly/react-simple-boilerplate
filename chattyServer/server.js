@@ -1,6 +1,7 @@
 const express = require('express');
 const SocketServer = require('ws').Server;
 const WebSocket = require('ws');
+const uuidv5 = require('uuid/v5');
 
 // Set the port to 3001
 const PORT = 3001;
@@ -29,13 +30,13 @@ wss.on('connection', (ws) => {
           let message = {};
           console.log("client ", client.readyState);
           console.log("Socket ", WebSocket.OPEN);
-          if (client !== ws && client.readyState === WebSocket.OPEN) {
+          if (client.readyState === WebSocket.OPEN) {
           if (data != "Connected to server") {
             const parsed = JSON.parse(data);
             switch(parsed.type) {
               case "postNotification":
                 message = {type: "incomingMessage",
-                           id: parsed.content.id,
+                           id: uuidv5(`http://localhost:3000/${new Date().getMilliseconds()}`, uuidv5.DNS),
                            username: parsed.content.username,
                            content: parsed.content.content};
                 client.send(JSON.stringify(message));
@@ -43,6 +44,7 @@ wss.on('connection', (ws) => {
               case "postMessage":
                 message = {type: "incomingNotification",
                            content: parsed.content};
+                console.log("post: ", message, " data ", parsed);
                 client.send(JSON.stringify(message));
                 break;
               default:

@@ -1,45 +1,43 @@
-React Boilerplate
-=====================
+# ChattyApp Project
 
-A minimal and light dev environment for ReactJS.
+ChattyApp is a simple chat application.
 
-### Usage
+## Getting Started
 
-Clone the boilerplate and create your own git repo.
+1. Install dependencies using the `npm install` command.
+2. Start the web client using the `npm start` command in the 'react-simple-boilerplate' folder. The app will be served at <http://localhost:3000/>.
+3. Start the web server using the `npm start` command in the 'chattyServer' folder.
+3. Go to <http://localhost:3000/> in your browser.
 
-```
-git clone git@github.com:lighthouse-labs/react-simple-boilerplate.git
-cd react-simple-boilerplate
-git remote rm origin
-git remote add origin [YOUR NEW REPOSITORY]
-# Manually update your package.json file
-```
+## Client Dependencies
 
-Install the dependencies and start the server.
+- babel-core
+- babel-loader
+- babel-preset-es2015
+- babel-preset-react
+- css-loader
+- node-sass
+- sass-loader
+- sockjs-client
+- style-loader
+- webpack
+- webpack-dev-server
+- react
+- react-dom
 
-```
-npm install
-npm start
-open http://localhost:3000
-```
+## Server Dependencies
 
-### Static Files
+- express
+- ws
+- uuid
 
-You can store static files like images, fonts, etc in the `build` folder.
+## Final Product
 
-For example, if you copy a file called my_image.png into the build folder you can access it using `http://localhost:3000/build/my_image.png`.
+!["URL tweets"](https://github.com/michaelrychly/tweeter/blob/master/docs/tweets.png?raw=true)
+!["URL compose"](https://github.com/michaelrychly/tweeter/blob/master/docs/compose.png?raw=true)
+!["URL no text"](https://github.com/michaelrychly/tweeter/blob/master/docs/textEmpty.png?raw=true)
+!["URL text>140"](https://github.com/michaelrychly/tweeter/blob/master/docs/textTooMuch.png?raw=true)
 
-### Linting
+## Room for improvement
 
-This boilerplate project includes React ESLint configuration.
-
-```
-npm run lint
-```
-
-### Dependencies
-
-* React
-* Webpack
-* [babel-loader](https://github.com/babel/babel-loader)
-* [webpack-dev-server](https://github.com/webpack/webpack-dev-server)
+- implement the following functionality: different colors for clients, random gifs, load pictures

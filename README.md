@@ -33,10 +33,10 @@ ChattyApp is a simple chat application.
 
 ## Final Product
 
-!["URL tweets"](https://github.com/michaelrychly/tweeter/blob/master/docs/tweets.png?raw=true)
-!["URL compose"](https://github.com/michaelrychly/tweeter/blob/master/docs/compose.png?raw=true)
-!["URL no text"](https://github.com/michaelrychly/tweeter/blob/master/docs/textEmpty.png?raw=true)
-!["URL text>140"](https://github.com/michaelrychly/tweeter/blob/master/docs/textTooMuch.png?raw=true)
+!["URL Homepage"](https://github.com/michaelrychly/react-simple-boilerplate/blob/master/docs/Entry%20page.png?raw=true)
+!["URL Usernames"](https://github.com/michaelrychly/react-simple-boilerplate/blob/master/docs/Change%20user%20names.png?raw=true)
+!["URL Messages"](https://github.com/michaelrychly/react-simple-boilerplate/blob/master/docs/Messages%20sent.png?raw=true)
+!["URL Online"](https://github.com/michaelrychly/react-simple-boilerplate/blob/master/docs/Show%20online%20clients.png?raw=true)
 
 ## Room for improvement
 
